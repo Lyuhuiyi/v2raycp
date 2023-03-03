@@ -4,7 +4,6 @@
 echo "正在/opt 创建xray文件夹 \n"
 cd /opt
 rm /opt/xray/Xray-linux-64.zip
-rm /etc/nginx/nginx.conf
 rm /opt/v2raycp.save
 mkdir xray
 cd /opt/xray
@@ -24,7 +23,7 @@ mkdir cert
 cd
 
 echo "当前正在进行证书注册 \n"
-bash ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+bash ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt --debug
 
 echo "请输入当前机器的完整域名 \n"
 read -e yuming
@@ -34,15 +33,14 @@ page=$(pwgen -c 12)
 
 
 echo "正在注册 \n"
-cd ~/.acme.sh/
-cmd1='bash acme.sh --issue -d "$yuming" -k ec-256 --alpn'
-echo ${cmd1}|awk '{run=$0;system(run)}'
+echo 'bash ~/.acme.sh/acme.sh --issue -d "$yuming" -k ec-256 --alpn --debug' > /opt/cert/cmd.sh
+bash /opt/cert/cmd.sh
 
 echo "正在获取证书"
-cmd2='bash acme.sh --installcert -d "$yuming" --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc'
-echo ${cmd2}|awk '{run=$0;system(run)}'
+echo 'bash ~/.acme.sh/acme.sh --installcert -d "$yuming" --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc --debug' > /opt/cert/cmd.sh
+bash /opt/cert/cmd.sh
+rm /opt/cert/cmd.sh
 
-cd
 rm /etc/nginx/sites-available/default
 ht='server {
 	listen 80;
@@ -78,8 +76,6 @@ server {
 }
 '
 echo $ht > /etc/nginx/sites-available/default
-sleep 1
-echo $ht > /etc/nginx/nginx.conf
 
 echo "正在尝试打开nginx"
 service nginx start
