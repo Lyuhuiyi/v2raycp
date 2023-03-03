@@ -15,6 +15,7 @@ echo "正在安装nginx和pwgen 如果没有进行apt update 请手动执行一�
 apt-get install nginx -y
 apt-get install pwgen -y
 apt-get install screen -y
+apt-get install unzip -y
 
 echo "获取acme中 \n"
 curl https://get.acme.sh | sh
