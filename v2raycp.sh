@@ -40,7 +40,7 @@ echo "正在获取证书"
 cmd2="bash ~/.acme.sh/acme.sh --installcert -d '$yuming' --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc"
 $cmd2
 
-sed "0,$d" /etc/nginx/sites-available/default
+rm /etc/nginx/sites-available/default
 ht='server {
 	listen 80;
 	server_name $yuming;
