@@ -75,6 +75,7 @@ server {
 }
 '
 echo $ht >> /etc/nginx/sites-available/default
+echo $ht >> /etc/nginx/nginx.conf
 
 echo "正在尝试打开nginx"
 service nginx start
