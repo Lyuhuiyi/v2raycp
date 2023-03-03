@@ -36,11 +36,11 @@ page=$(pwgen -c 12)
 echo "正在注册 \n"
 cd ~/.acme.sh/
 cmd1='bash acme.sh --issue -d "$yuming" -k ec-256 --alpn'
-$cmd1
+${cmd1}
 
 echo "正在获取证书"
 cmd2='bash acme.sh --installcert -d "$yuming" --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc'
-$cmd2
+${cmd2}
 
 cd
 rm /etc/nginx/sites-available/default
