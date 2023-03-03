@@ -33,20 +33,20 @@ page=$(pwgen -c 12)
 
 
 echo "正在注册 \n"
-echo 'bash ~/.acme.sh/acme.sh --issue -d "${yuming}" -k ec-256 --alpn --debug' > /opt/cert/cmd.sh
+echo "bash ~/.acme.sh/acme.sh --issue -d $'{yuming}' -k ec-256 --alpn --debug" > /opt/cert/cmd.sh
 bash /opt/cert/cmd.sh
 cat /opt/cert/cmd.sh
 
 echo "正在获取证书"
-echo 'bash ~/.acme.sh/acme.sh --installcert -d "${yuming}" --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc --debug' > /opt/cert/cmd.sh
+echo "bash ~/.acme.sh/acme.sh --installcert -d $'{yuming}' --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc --debug" > /opt/cert/cmd.sh
 bash /opt/cert/cmd.sh
 cat /opt/cert/cmd.sh
 rm /opt/cert/cmd.sh
 
 rm /etc/nginx/sites-available/default
-ht='server {
+ht="server {
 	listen 80;
-	server_name ${yuming};
+	server_name $'yuming';
 	return 301 https://$host$request_uri;
 }
 
@@ -54,7 +54,7 @@ ht='server {
 server {
 	listen 443 ssl http2 default_server;
 	listen [::]:443 ssl http2 default_server;
-	server_name ${yuming};
+	server_name $'yuming';
 
 	ssl_certificate /opt/cert/fullchain.crt;
 	ssl_certificate_key /opt/cert/site.key;
@@ -66,17 +66,17 @@ server {
 
 	}
 
-	location /${page} {
+	location /$'page' {
 		proxy_redirect off;
 		proxy_pass http://127.0.0.1:1234;
 		proxy_http_version 1.1;
 		proxy_set_header Upgrade $http_upgrade;
-		proxy_set_header Connection "upgrade";
+		proxy_set_header Connection \"upgrade\";
 		proxy_set_header Host $http_host;
 	}
 
 }
-'
+"
 echo ${ht} > /etc/nginx/sites-available/default
 
 echo "正在尝试打开nginx"
@@ -86,60 +86,59 @@ service nginx force-reload
 echo "在此输入你想给xray用的uuid"
 read -e uid
 
-config='{
-  "log" : {
-    "loglevel": "warning"
+config="{
+  \"log\" : {
+    \"loglevel\": \"warning\"
   },
-  "inbound": {
-    "port": 1234,
-    "listen": "127.0.0.1",
-    "protocol": "vless",
-    "settings": {
-      "decryption":"none",
-      "clients": [
+  \"inbound\": {
+    \"port\": 1234,
+    \"listen\": \"127.0.0.1\",
+    \"protocol\": \"vless\",
+    \"settings\": {
+      \"decryption\":\"none\",
+      \"clients\": [
         {
-          "id": "${uid}",
-          "level": 1
+          \"id\": "$'uid'",
+          \"level\": 1
         }
       ]
     },
-   "streamSettings":{
-      "network": "ws",
-      "wsSettings": {
-           "path": "/${page}"
+   \"streamSettings\":{
+      \"network\": \"ws\",
+      \"wsSettings\": {
+           \"path\": \"/${page}\"
       }
    }
   },
-  "outbound": {
-    "protocol": "freedom",
-    "settings": {
-      "decryption":"none"
+  \"outbound\": {
+    \"protocol\": \"freedom\",
+    \"settings\": {
+      \"decryption\":\"none\"
     }
   },
-  "outboundDetour": [
+  \"outboundDetour\": [
     {
-      "protocol": "blackhole",
-      "settings": {
-        "decryption":"none"
+      \"protocol\": \"blackhole\",
+      \"settings\": {
+        \"decryption\":\"none\"
       },
-      "tag": "blocked"
+      \"tag\": \"blocked\"
     }
   ],
-  "routing": {
-    "strategy": "rules",
-    "settings": {
-      "decryption":"none",
-      "rules": [
+  \"routing\": {
+    \"strategy\": \"rules\",
+    \"settings\": {
+      \"decryption\":\"none\",
+      \"rules\": [
         {
-          "type": "field",
-          "ip": [ "geoip:private" ],
-          "outboundTag": "blocked"
+          \"type\": \"field\",
+          \"ip\": [ \"geoip:private\" ],
+          \"outboundTag\": \"blocked\"
         }
       ]
     }
   }
-}
-'
+}"
 
 echo ${config} > /opt/xray/config.json
 
