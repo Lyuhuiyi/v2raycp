@@ -145,7 +145,7 @@ echo "正在使用screen打开xray"
 
 cd /opt/xray
 
-screen -dmS xray ./xray -c /opt/xray/config.json
+screen -dS xray ./xray -c /opt/xray/config.json
 
 cd
 
