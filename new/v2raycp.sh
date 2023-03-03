@@ -35,10 +35,12 @@ page=$(pwgen -c 12)
 echo "正在注册 \n"
 echo 'bash ~/.acme.sh/acme.sh --issue -d "$yuming" -k ec-256 --alpn --debug' > /opt/cert/cmd.sh
 bash /opt/cert/cmd.sh
+cat /opt/cert/cmd.sh
 
 echo "正在获取证书"
 echo 'bash ~/.acme.sh/acme.sh --installcert -d "$yuming" --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc --debug' > /opt/cert/cmd.sh
 bash /opt/cert/cmd.sh
+cat /opt/cert/cmd.sh
 rm /opt/cert/cmd.sh
 
 rm /etc/nginx/sites-available/default
