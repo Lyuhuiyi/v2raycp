@@ -4,6 +4,7 @@
 echo "正在/opt 创建xray文件夹 \n"
 cd /opt
 rm /opt/xray/Xray-linux-64.zip
+rm /etc/nginx/nginx.conf
 mkdir xray
 cd /opt/xray
 
