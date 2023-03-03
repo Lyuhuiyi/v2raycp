@@ -3,6 +3,7 @@
 
 echo "正在/opt 创建xray文件夹 \n"
 cd /opt
+rm /opt/xray/Xray-linux-64.zip
 mkdir xray
 cd /opt/xray
 
@@ -26,7 +27,7 @@ echo "当前正在进行证书注册 \n"
 bash ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt
 
 echo "请输入当前机器的完整域名 \n"
-read yuming
+read -e yuming
 
 service nginx stop
 page=$(pwgen -c 12)
@@ -81,7 +82,7 @@ service nginx start
 service nginx force-reload
 
 echo "在此输入你想给xray用的uuid"
-read uid
+read -e uid
 
 config='{
   "log" : {
