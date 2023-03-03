@@ -25,7 +25,7 @@ cd
 echo "当前正在进行证书注册 \n"
 bash ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt --debug
 
-echo "请输入当前机器的完整域名 \n" #失效中 请手动修改后面的所有$yuming为你的域名
+echo "请输入当前机器的完整域名 \n" #可能失效 请手动修改后面的所有$yuming为你的域名
 read -e yuming
 
 service nginx stop
@@ -33,12 +33,12 @@ page=$(pwgen -c 12)
 
 
 echo "正在注册 \n"
-echo 'bash ~/.acme.sh/acme.sh --issue -d "$yuming" -k ec-256 --alpn --debug' > /opt/cert/cmd.sh
+echo 'bash ~/.acme.sh/acme.sh --issue -d "${yuming}" -k ec-256 --alpn --debug' > /opt/cert/cmd.sh
 bash /opt/cert/cmd.sh
 cat /opt/cert/cmd.sh
 
 echo "正在获取证书"
-echo 'bash ~/.acme.sh/acme.sh --installcert -d "$yuming" --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc --debug' > /opt/cert/cmd.sh
+echo 'bash ~/.acme.sh/acme.sh --installcert -d "${yuming}" --fullchainpath /opt/cert/fullchain.crt --keypath /opt/cert/site.key --ecc --debug' > /opt/cert/cmd.sh
 bash /opt/cert/cmd.sh
 cat /opt/cert/cmd.sh
 rm /opt/cert/cmd.sh
@@ -46,7 +46,7 @@ rm /opt/cert/cmd.sh
 rm /etc/nginx/sites-available/default
 ht='server {
 	listen 80;
-	server_name $yuming;
+	server_name ${yuming};
 	return 301 https://$host$request_uri;
 }
 
@@ -54,7 +54,7 @@ ht='server {
 server {
 	listen 443 ssl http2 default_server;
 	listen [::]:443 ssl http2 default_server;
-	server_name $yuming;
+	server_name ${yuming};
 
 	ssl_certificate /opt/cert/fullchain.crt;
 	ssl_certificate_key /opt/cert/site.key;
@@ -66,7 +66,7 @@ server {
 
 	}
 
-	location /$page {
+	location /${page} {
 		proxy_redirect off;
 		proxy_pass http://127.0.0.1:1234;
 		proxy_http_version 1.1;
@@ -77,7 +77,7 @@ server {
 
 }
 '
-echo $ht > /etc/nginx/sites-available/default
+echo ${ht} > /etc/nginx/sites-available/default
 
 echo "正在尝试打开nginx"
 service nginx start
@@ -98,7 +98,7 @@ config='{
       "decryption":"none",
       "clients": [
         {
-          "id": "$uid",
+          "id": "${uid}",
           "level": 1
         }
       ]
@@ -106,7 +106,7 @@ config='{
    "streamSettings":{
       "network": "ws",
       "wsSettings": {
-           "path": "/$page"
+           "path": "/${page}"
       }
    }
   },
@@ -141,7 +141,7 @@ config='{
 }
 '
 
-echo $config > /opt/xray/config.json
+echo ${config} > /opt/xray/config.json
 
 echo "正在使用screen打开xray"
 
