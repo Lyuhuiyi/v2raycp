@@ -5,6 +5,7 @@ echo "正在/opt 创建xray文件夹 \n"
 cd /opt
 rm /opt/xray/Xray-linux-64.zip
 rm /etc/nginx/nginx.conf
+rm /opt/v2raycp.save
 mkdir xray
 cd /opt/xray
 
@@ -74,8 +75,9 @@ server {
 
 }
 '
-echo $ht >> /etc/nginx/sites-available/default
-echo $ht >> /etc/nginx/nginx.conf
+echo $ht > /etc/nginx/sites-available/default
+sleep 1
+echo $ht > /etc/nginx/nginx.conf
 
 echo "正在尝试打开nginx"
 service nginx start
@@ -139,7 +141,7 @@ config='{
 }
 '
 
-echo $config >> /opt/xray/config.json
+echo $config > /opt/xray/config.json
 
 echo "正在使用screen打开xray"
 
