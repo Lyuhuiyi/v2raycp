@@ -25,7 +25,7 @@ cd
 echo "当前正在进行证书注册 \n"
 bash ~/.acme.sh/acme.sh --set-default-ca --server letsencrypt --debug
 
-echo "请输入当前机器的完整域名 \n"
+echo "请输入当前机器的完整域名 \n" #失效中 请手动修改后面的所有$yuming为你的域名
 read -e yuming
 
 service nginx stop
